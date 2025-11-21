@@ -83,14 +83,33 @@ router.put('/:id', auth, upload.single('photo'), async (req,res)=>{
 });
 
 // delete post (only author)
-router.delete('/:id', auth, async (req,res)=>{
-  try{
+router.delete('/:id', auth, async (req, res) => {
+  try {
     const post = await Post.findById(req.params.id);
-    if(!post) return res.status(404).json({ message:'Not found' });
-    if(post.author.toString() !== req.user.id) return res.status(403).json({ message:'Not allowed' });
-    await post.remove();
-    res.json({ message:'Deleted' });
-  }catch(err){ res.status(500).json({ message:'Server error' }); }
+    if (!post) return res.status(404).json({ message: 'Not found' });
+
+    // Extract user ID from any possible JWT payload field
+    const userId = req.user.id || req.user._id || req.user.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: 'Invalid token payload' });
+    }
+
+    if (post.author.toString() !== userId.toString()) {
+      return res.status(403).json({ message: 'Not allowed' });
+    }
+
+    // Mongoose 7 fix
+    await post.deleteOne();
+
+    res.json({ message: 'Deleted' });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
+
+
 
 module.exports = router;
