@@ -24,3 +24,4 @@ mongoose.connect("mongodb+srv://MP-SocialMedia:MP-SocialMedia@cluster0.p8rlpxa.m
     app.listen(PORT, ()=> console.log('Server listening on', PORT));
   })
   .catch(err => console.error(err));
+ 

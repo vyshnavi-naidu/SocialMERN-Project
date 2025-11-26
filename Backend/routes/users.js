@@ -25,7 +25,7 @@ router.get('/', auth, async (req,res)=>{
 // follow / unfollow
 router.post('/:id/follow', auth, async (req,res)=>{
   try{
-    if(req.user.id === req.params.id) return res.status(400).json({ message:'Cannot follow yourself' });
+    if(req.user.id === req.params.id) return res.status(400).json({ message:'Cannot follow/unfollow yourself' });
     const me = await User.findById(req.user.id);
     const other = await User.findById(req.params.id);
     if(!other) return res.status(404).json({ message:'User not found' });

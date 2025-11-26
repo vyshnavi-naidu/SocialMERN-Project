@@ -11,6 +11,7 @@ export default function App(){
   const nav = useNavigate();
   const token = localStorage.getItem('token');
   const logout = ()=>{ localStorage.clear(); nav('/login'); };
+  
   return (
     <div>
       <header className="topbar">
